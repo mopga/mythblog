@@ -1,0 +1,26 @@
+# VCS / CI
+.git
+.gitignore
+.github/
+
+# Local build artifacts and runtime state
+bin/
+data/
+dist/
+coverage.out
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Secrets and local environment
+.env
+.env.*
+
+# Docs/deploy assets not needed in the image
+deploy/
+docs/
+Dockerfile
+docker-compose.yml
+.dockerignore

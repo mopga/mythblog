@@ -142,6 +142,75 @@ ADMIN_API_KEY
 HERMES_API_KEY
 ```
 
+## Quick Start (Docker Compose)
+
+Requirements: Docker Engine with the Compose plugin.
+
+1. Copy the environment template and replace every placeholder with real
+   secrets (all four are required to start):
+
+   ```bash
+   cp .env.example .env   # then edit .env; never commit it
+   ```
+
+   Recommended secret generation (each value must be unique):
+
+   ```bash
+   openssl rand -hex 32   # use one output per ADMIN_API_KEY / HERMES_API_KEY / SESSION_SECRET
+   ```
+
+2. Build and start the service (binds to `127.0.0.1:8890` only):
+
+   ```bash
+   docker compose up -d --build
+   docker compose logs -f oddity
+   curl http://127.0.0.1:8890/health
+   ```
+
+All state (SQLite database + uploaded media) is kept in the `mythblog-data`
+named volume mounted at `/data` inside the container. Back up that volume to
+back up the blog. Put nginx or another reverse proxy in front of the loopback
+port for public access — see `deploy/nginx-location.conf` for a sub-path
+example.
+
+Useful operations:
+
+```bash
+docker compose down            # stop; the data volume is preserved
+docker compose pull && docker compose up -d   # upgrade (release image)
+docker volume inspect mythblog-data
+```
+
+## Releases
+
+Every `v*` tag is built by GitHub Actions (`.github/workflows/release.yml`)
+and published in two forms:
+
+- **Release binaries** — static Linux builds attached to the GitHub release:
+  `oddity_<version>_linux-amd64.tar.gz`, `oddity_<version>_linux-arm64.tar.gz`
+  plus `SHA256SUMS` and per-file `.sha256` checksums. Verify and run:
+
+  ```bash
+  VERSION=v0.1.0
+  curl -fLO "https://github.com/mopga/mythblog/releases/download/${VERSION}/oddity_${VERSION}_linux-amd64.tar.gz"
+  curl -fLO "https://github.com/mopga/mythblog/releases/download/${VERSION}/oddity_${VERSION}_linux-amd64.tar.gz.sha256"
+  sha256sum -c "oddity_${VERSION}_linux-amd64.tar.gz.sha256"
+  tar xzf "oddity_${VERSION}_linux-amd64.tar.gz"
+  # configure environment variables (see .env.example), then:
+  ./oddity
+  ```
+
+- **Docker images** on GHCR, built for `linux/amd64` and `linux/arm64`:
+
+  ```text
+  ghcr.io/mopga/mythblog:v0.1.0
+  ```
+
+  To deploy a published image instead of a local build, replace the
+  `build:` block in `docker-compose.yml` with
+  `image: ghcr.io/mopga/mythblog:v0.1.0` (the tag pinned in the file's
+  comment) and run `docker compose up -d`.
+
 ## Development
 
 Requires Go 1.27 or newer.
@@ -156,7 +225,8 @@ curl http://127.0.0.1:8890/health
 
 Default address: `127.0.0.1:8890`.
 
-Configuration will be expanded as later milestones land. Secrets must be supplied through environment variables and never committed.
+Secrets are supplied through environment variables (see `.env.example`) and
+must never be committed.
 
 ## License
 
