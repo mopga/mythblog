@@ -1,0 +1,48 @@
+name: mythblog
+
+services:
+  oddity:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # For release-based deployments you can use the published image instead
+    # of a local build (see the GitHub release notes):
+    #   image: ghcr.io/mopga/mythblog:v0.1.0
+    image: mythblog:local
+    restart: unless-stopped
+    # Bind only to loopback; put nginx/caddy in front for public access.
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${BIND_PORT:-8890}:8890"
+    environment:
+      # Container defaults from the image (overridable here if needed):
+      #   ODDITY_ADDR=0.0.0.0:8890
+      #   ODDITY_DB_PATH=/data/oddity.db
+      #   STORAGE_DRIVER=local
+      #   LOCAL_STORAGE_PATH=/data/media
+      ADMIN_API_KEY: ${ADMIN_API_KEY:?set ADMIN_API_KEY in .env}
+      HERMES_API_KEY: ${HERMES_API_KEY:?set HERMES_API_KEY in .env}
+      EDITOR_USER: ${EDITOR_USER:-editor}
+      EDITOR_PASSWORD: ${EDITOR_PASSWORD:?set EDITOR_PASSWORD in .env}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env}
+      ADMIN_COOKIE_PATH: ${ADMIN_COOKIE_PATH:-/admin}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://127.0.0.1:8890}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-10485760}
+      # Optional R2 storage (STORAGE_DRIVER=r2):
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-local}
+      R2_ENDPOINT: ${R2_ENDPOINT:-}
+      R2_BUCKET: ${R2_BUCKET:-}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:-}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:-}
+      R2_PUBLIC_BASE_URL: ${R2_PUBLIC_BASE_URL:-}
+    volumes:
+      - mythblog-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8890/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  mythblog-data:
+    name: mythblog-data
