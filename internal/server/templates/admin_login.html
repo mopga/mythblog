@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050806">
+  <title>Вход для редактора · Архив аномалий</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260830-editor">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-card">
+      <div class="eyebrow">[ ЗАКРЫТАЯ ЗОНА ]</div>
+      <a class="brand login-brand" href="/">АРХИВ<span>://</span>АНОМАЛИЙ</a>
+      <h1>Вход для редактора</h1>
+      <p>Ручная публикация и редактирование материалов.</p>
+      {{if .Error}}<div class="form-error">{{.Error}}</div>{{end}}
+      <form method="post" action="/admin/login" class="admin-form login-form">
+        <input type="hidden" name="csrf" value="{{.CSRF}}">
+        <label>Логин<input name="username" autocomplete="username" required autofocus></label>
+        <label>Пароль<input type="password" name="password" autocomplete="current-password" required></label>
+        <button type="submit">Войти в архив</button>
+      </form>
+      <a class="back-link" href="/">← Вернуться к публичному архиву</a>
+    </section>
+  </main>
+</body>
+</html>

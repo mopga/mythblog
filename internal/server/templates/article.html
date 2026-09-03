@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050806">
+  <title>{{.Article.Title}} · Архив аномалий</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260829-matrix">
+</head>
+<body>
+  {{template "public-nav" .}}
+  <main>
+    <article class="article">
+      <div class="article-kicker"><span>{{articleType .Article.Type}}</span><span>{{credibility .Article.Credibility}}</span></div>
+      <h1>{{.Article.Title}}</h1>
+      {{if .Article.Subtitle}}<p class="subtitle">{{.Article.Subtitle}}</p>{{end}}
+      <div class="article-facts">
+        <span><b>Статус:</b> {{articleStatus .Article.Status}}</span>
+        {{if .Article.EventDateText}}<span><b>Дата:</b> {{.Article.EventDateText}}</span>{{end}}
+        {{if .Article.LocationText}}<span><b>Место:</b> {{.Article.LocationText}}</span>{{end}}
+      </div>
+      {{range .Article.Media}}{{if .IsCover}}
+      <figure class="cover"><img src="{{.URL}}" alt="{{.AltText}}"><figcaption>{{.Caption}}</figcaption></figure>
+      {{end}}{{end}}
+      <div class="chips">{{range .Article.Categories}}<a href="/categories/{{.Slug}}">{{.Name}}</a>{{end}}</div>
+      <div class="markdown">{{.BodyHTML}}</div>
+      {{if .Article.Sources}}
+      <section class="article-section"><h2>Источники</h2><ol class="sources">{{range .Article.Sources}}<li><a href="{{.URL}}" rel="nofollow noopener">{{if .Title}}{{.Title}}{{else}}{{.URL}}{{end}}</a>{{if .Publisher}}<span>{{.Publisher}}</span>{{end}}</li>{{end}}</ol></section>
+      {{end}}
+      {{if .Article.Relations}}
+      <section class="article-section"><h2>Связанные материалы</h2><ul>{{range .Article.Relations}}<li>{{relationLabel .Relation}}: <a href="/articles/{{.Slug}}">{{.Title}}</a></li>{{end}}</ul></section>
+      {{end}}
+    </article>
+  </main>
+  <footer><a href="/">← Вернуться в архив</a><span>АРХИВ АНОМАЛИЙ</span></footer>
+</body>
+</html>

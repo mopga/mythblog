@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050806">
+  <title>{{.Category.Name}} · Архив аномалий</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260829-matrix">
+</head>
+<body>
+  {{template "public-nav" .}}
+  <main>
+    <section class="category-hero">
+      <div class="eyebrow">[ КАТЕГОРИЯ ]</div>
+      <h1>{{.Category.Name}}</h1>
+      <p>{{.Category.Description}}</p>
+    </section>
+    <section class="content-section">
+      <div class="section-heading"><div><span class="index">//</span><h2>Материалы</h2></div></div>
+      <div class="cards">
+        {{range .Articles}}
+        <article class="archive-card">
+          <div class="meta"><span>{{articleType .Type}}</span><span>{{credibility .Credibility}}</span></div>
+          <h2><a href="/articles/{{.Slug}}">{{.Title}}</a></h2>
+          <p>{{.Summary}}</p>
+          <a class="read-more" href="/articles/{{.Slug}}">Открыть материал <b>→</b></a>
+        </article>
+        {{else}}
+        <div class="empty-state"><span class="cursor">_</span><h3>В этой категории пока нет материалов</h3><p>Архив пополнится после следующего исследования.</p></div>
+        {{end}}
+      </div>
+    </section>
+  </main>
+  <footer><a href="/">← На главную</a><span>АРХИВ АНОМАЛИЙ</span></footer>
+</body>
+</html>

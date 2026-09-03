@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050806">
+  <title>Архив аномалий — энциклопедия необъяснимого</title>
+  <link rel="stylesheet" href="/static/style.css?v=20260829-matrix">
+</head>
+<body>
+  {{template "public-nav" .}}
+  <main>
+    <section class="hero">
+      <div class="eyebrow">[ БАЗА НЕОБЪЯСНИМОГО ]</div>
+      <h1>Архив странного.<br><span>Факты отделены от легенд.</span></h1>
+      <p>Энциклопедия необъяснимых событий, городских легенд, секретных операций, существ и артефактов. Источники сохраняются. Сомнения — тоже.</p>
+    </section>
+    <section class="content-section">
+      <div class="section-heading">
+        <div><span class="index">01</span><h2>Последние материалы</h2></div>
+        <span class="terminal-mark">[ СОРТИРОВКА: СНАЧАЛА НОВЫЕ ]</span>
+      </div>
+      <div class="cards">
+        {{range .Articles}}
+        <article class="archive-card">
+          <div class="meta"><span>{{articleType .Type}}</span><span>{{credibility .Credibility}}</span></div>
+          <h3><a href="/articles/{{.Slug}}">{{.Title}}</a></h3>
+          {{if .Subtitle}}<p class="card-subtitle">{{.Subtitle}}</p>{{end}}
+          <p>{{.Summary}}</p>
+          <a class="read-more" href="/articles/{{.Slug}}">Открыть материал <b>→</b></a>
+        </article>
+        {{else}}
+        <div class="empty-state">
+          <span class="cursor">_</span>
+          <h3>Архив пока пуст</h3>
+          <p>Первая исследованная история появится здесь сразу после публикации.</p>
+        </div>
+        {{end}}
+      </div>
+    </section>
+  </main>
+  <footer><span>АРХИВ АНОМАЛИЙ</span><span>Факты · свидетельства · легенды · гипотезы</span></footer>
+</body>
+</html>

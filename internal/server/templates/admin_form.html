@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{if .IsNew}}Новый материал{{else}}Редактирование{{end}} · Управление архивом</title><link rel="stylesheet" href="/static/style.css?v=20260829-matrix"></head>
+<body>
+<header class="site-header"><div class="masthead"><a class="brand" href="/admin/articles">АРХИВ<span>://</span>УПРАВЛЕНИЕ</a><div class="header-actions"><a href="/">Публичный архив</a><form method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{{.CSRF}}"><button class="logout-button" type="submit">Выйти</button></form></div></div></header>
+<main>
+  <div class="eyebrow">[ РЕДАКТОР МАТЕРИАЛОВ ]</div>
+  <h1>{{if .IsNew}}Новый материал{{else}}Редактирование{{end}}</h1>
+  {{if .Error}}<div class="form-error">Ошибка: {{.Error}}</div>{{end}}
+  <form method="post" class="admin-form">
+    <input type="hidden" name="csrf" value="{{.CSRF}}">
+    <label>Адрес (slug)<input name="slug" required value="{{.Input.Slug}}"></label>
+    <label>Заголовок<input name="title" required value="{{.Input.Title}}"></label>
+    <label>Подзаголовок<input name="subtitle" value="{{.Input.Subtitle}}"></label>
+    <label>Краткое описание<textarea name="summary" rows="3">{{.Input.Summary}}</textarea></label>
+    <div class="form-grid">
+      <label>Тип<select name="type">{{if not (knownType .Input.Type)}}<option value="{{.Input.Type}}" selected>Пользовательский тип</option>{{end}}<option value="story" {{if eq .Input.Type "story"}}selected{{end}}>История</option><option value="case" {{if eq .Input.Type "case"}}selected{{end}}>Случай</option><option value="legend" {{if eq .Input.Type "legend"}}selected{{end}}>Легенда</option><option value="creature" {{if eq .Input.Type "creature"}}selected{{end}}>Существо</option><option value="conspiracy" {{if eq .Input.Type "conspiracy"}}selected{{end}}>Теория заговора</option><option value="government_program" {{if eq .Input.Type "government_program"}}selected{{end}}>Государственная программа</option><option value="experiment" {{if eq .Input.Type "experiment"}}selected{{end}}>Эксперимент</option><option value="phenomenon" {{if eq .Input.Type "phenomenon"}}selected{{end}}>Явление</option><option value="place" {{if eq .Input.Type "place"}}selected{{end}}>Место</option><option value="person" {{if eq .Input.Type "person"}}selected{{end}}>Человек</option><option value="artifact" {{if eq .Input.Type "artifact"}}selected{{end}}>Артефакт</option><option value="other" {{if eq .Input.Type "other"}}selected{{end}}>Другое</option></select></label>
+      <label>Статус<select name="status">{{if not (knownStatus .Input.Status)}}<option value="{{.Input.Status}}" selected>Пользовательский статус</option>{{end}}<option value="published" {{if eq .Input.Status "published"}}selected{{end}}>Опубликован</option><option value="draft" {{if eq .Input.Status "draft"}}selected{{end}}>Черновик</option><option value="archived" {{if eq .Input.Status "archived"}}selected{{end}}>В архиве</option></select></label>
+      <label>Достоверность<select name="credibility">{{if not (knownCredibility .Input.Credibility)}}<option value="{{.Input.Credibility}}" selected>Пользовательская оценка</option>{{end}}<option value="confirmed" {{if eq .Input.Credibility "confirmed"}}selected{{end}}>Подтверждено</option><option value="disputed" {{if eq .Input.Credibility "disputed"}}selected{{end}}>Спорно</option><option value="legend" {{if eq .Input.Credibility "legend"}}selected{{end}}>Легенда</option><option value="unknown" {{if eq .Input.Credibility "unknown"}}selected{{end}}>Не установлено</option></select></label>
+      <label>Дата события<input name="event_date_text" value="{{.Input.EventDateText}}"></label>
+      <label>Место<input name="location_text" value="{{.Input.LocationText}}"></label>
+    </div>
+    <fieldset><legend>Категории</legend>{{range .Categories}}<label class="check"><input type="checkbox" name="categories" value="{{.Category.Slug}}" {{if .Checked}}checked{{end}}> {{.Category.Name}}</label>{{else}}<p>Категории пока не созданы.</p>{{end}}</fieldset>
+    <label>Текст Markdown<textarea name="body_markdown" rows="20" required>{{.Input.BodyMarkdown}}</textarea></label>
+    <label>Источники — строка: URL | название | издатель | дата | тип<textarea name="sources_text" rows="5">{{.SourcesText}}</textarea></label>
+    <label>Связи — строка: ID материала | тип связи<textarea name="relations_text" rows="4">{{.RelationsText}}</textarea></label>
+    <button type="submit">Сохранить</button>
+  </form>
+  {{if not .IsNew}}
+  <section class="media-admin"><h2>Изображения</h2><form method="post" action="/admin/articles/{{.ID}}/media" enctype="multipart/form-data" class="admin-form"><input type="hidden" name="csrf" value="{{.CSRF}}"><label>Файл<input type="file" name="file" accept="image/*" required></label><label>Подпись<input name="caption"></label><label>Альтернативный текст<input name="alt_text"></label><label>Источник<input name="source_url" type="url"></label><label>Лицензия<input name="license"></label><label class="check"><input type="checkbox" name="is_cover" value="true"> Сделать обложкой</label><button type="submit">Загрузить</button></form>
+    <div class="admin-list">{{range .Media}}<article><img src="{{.URL}}" alt="{{.AltText}}" class="media-thumb"><div><span class="meta">{{if .IsCover}}Обложка{{else}}Галерея{{end}}</span><p>{{.Caption}}</p></div><form method="post" action="/admin/articles/{{$.ID}}/media/{{.ID}}/delete"><input type="hidden" name="csrf" value="{{$.CSRF}}"><button class="danger" type="submit">Удалить</button></form></article>{{else}}<p>Изображений пока нет.</p>{{end}}</div>
+  </section>
+  <form method="post" action="/admin/articles/{{.ID}}/delete" class="delete-form"><input type="hidden" name="csrf" value="{{.CSRF}}"><button class="danger" type="submit">Удалить материал</button></form>
+  {{end}}
+</main>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{{define "public-nav"}}
+<header class="site-header">
+  <div class="masthead">
+    <a class="brand" href="/">АРХИВ<span>://</span>АНОМАЛИЙ</a>
+    <span class="system-status"><i></i> архив доступен</span>
+  </div>
+  <nav class="category-nav" aria-label="Основная навигация">
+    <a class="nav-item nav-home" href="/">
+      <strong>Главная</strong>
+      <small>Новые материалы</small>
+    </a>
+    {{range .Navigation}}
+    <a class="nav-item" href="/categories/{{.Slug}}">
+      <strong>{{.Name}}</strong>
+      {{if .Description}}<small>{{.Description}}</small>{{end}}
+    </a>
+    {{end}}
+  </nav>
+</header>
+{{end}}

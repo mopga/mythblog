@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Управление · Архив аномалий</title><link rel="stylesheet" href="/static/style.css?v=20260829-matrix">
+</head>
+<body>
+<header class="site-header"><div class="masthead"><a class="brand" href="/admin/articles">АРХИВ<span>://</span>УПРАВЛЕНИЕ</a><div class="header-actions"><a href="/">Публичный архив</a><form method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{{.CSRF}}"><button class="logout-button" type="submit">Выйти</button></form></div></div></header>
+<main>
+  <div class="admin-head"><div><div class="eyebrow">[ УПРАВЛЕНИЕ АРХИВОМ ]</div><h1>Материалы</h1></div><a class="button" href="/admin/articles/new">Новый материал</a></div>
+  <div class="admin-list">
+    {{range .Articles}}<article><div><span class="meta">{{articleStatus .Status}} · {{articleType .Type}}</span><h2>{{.Title}}</h2><code>{{.Slug}}</code></div><a class="button secondary" href="/admin/articles/{{.ID}}">Редактировать</a></article>
+    {{else}}<div class="empty-state"><h3>Материалов пока нет</h3><p>Создайте первую статью вручную или через Hermes API.</p></div>{{end}}
+  </div>
+</main>
+</body>
+</html>
