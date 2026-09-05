@@ -127,7 +127,7 @@ ADMIN_COOKIE_PATH          # /oddity/admin in production
 ```text
 GET    /health
 GET    /api/v1/articles?slug=&title=  Bearer admin or Hermes
-GET    /api/v1/articles/{slug}        Bearer admin or Hermes
+GET    /api/v1/articles/{slug-or-id}  Bearer admin or Hermes
 POST   /api/v1/articles          Bearer admin or Hermes
 PUT    /api/v1/articles/{id}     Bearer admin or Hermes
 DELETE /api/v1/articles/{id}     Bearer admin only
