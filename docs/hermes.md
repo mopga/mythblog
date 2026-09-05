@@ -28,6 +28,7 @@ Public URL for an article: `{base}/articles/{slug}`.
    - `GET /api/v1/categories`
    - `GET /api/v1/articles?slug=<slug>`
    - `GET /api/v1/articles?title=<title>`
+   - `GET /api/v1/articles/<slug-or-id>` for one aggregate; positive integer path segments are treated as article IDs.
 4. Create missing categories if needed:
    - `POST /api/v1/categories`
 5. If article exists: `PUT /api/v1/articles/{id}`. Otherwise: `POST /api/v1/articles`.

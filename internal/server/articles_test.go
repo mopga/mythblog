@@ -121,6 +121,17 @@ func TestArticleAggregateCRUDAndFilters(t *testing.T) {
 	if decode(t, got)["article"].(map[string]any)["title"] != "Phoenix Lights Incident" {
 		t.Fatal("update missing")
 	}
+	gotByID := jsonRequest(t, h, http.MethodGet, "/api/v1/articles/"+itoa(id), "hermes-secret", nil)
+	if gotByID.Code != http.StatusOK {
+		t.Fatalf("get-by-id=%d %s", gotByID.Code, gotByID.Body.String())
+	}
+	if int64(decode(t, gotByID)["article"].(map[string]any)["id"].(float64)) != id {
+		t.Fatal("get-by-id mismatch")
+	}
+	missingByID := jsonRequest(t, h, http.MethodGet, "/api/v1/articles/999999", "hermes-secret", nil)
+	if missingByID.Code != http.StatusNotFound {
+		t.Fatalf("missing get-by-id=%d %s", missingByID.Code, missingByID.Body.String())
+	}
 	relatedPayload := map[string]any{
 		"slug": "arizona-ufo-wave", "title": "Arizona UFO Wave", "body_markdown": "Related case",
 		"type": "case", "status": "published",

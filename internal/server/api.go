@@ -89,7 +89,14 @@ func (a *App) listArticles(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{"articles": articles})
 }
 func (a *App) getArticle(w http.ResponseWriter, r *http.Request) {
-	article, err := a.content.GetBySlug(r.Context(), chi.URLParam(r, "slug"))
+	key := chi.URLParam(r, "key")
+	var article content.Article
+	var err error
+	if id, parseErr := strconv.ParseInt(key, 10, 64); parseErr == nil && id > 0 {
+		article, err = a.content.GetByID(r.Context(), id)
+	} else {
+		article, err = a.content.GetBySlug(r.Context(), key)
+	}
 	if err != nil {
 		handleContentError(w, err)
 		return

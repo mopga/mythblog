@@ -66,7 +66,7 @@ func NewWithStorage(cfg config.Config, db *sql.DB, store storage.ObjectStorage) 
 	})
 	r.Route("/api/v1", func(r chi.Router) {
 		r.With(app.requireReader).Get("/articles", app.listArticles)
-		r.With(app.requireReader).Get("/articles/{slug}", app.getArticle)
+		r.With(app.requireReader).Get("/articles/{key}", app.getArticle)
 		r.With(app.requireWriter).Post("/articles", app.createArticle)
 		r.With(app.requireWriter).Put("/articles/{id}", app.updateArticle)
 		r.With(app.requireAdmin).Delete("/articles/{id}", app.deleteArticle)
